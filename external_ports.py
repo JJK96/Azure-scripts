@@ -5,10 +5,24 @@ from azure.mgmt.core.tools import parse_resource_id
 import azure.core.exceptions as exceptions
 import os
 import logging
+from functools import cache
 
 sub_id = os.getenv("AZURE_SUBSCRIPTION_ID")
 client = NetworkManagementClient(credential=AzureCliCredential(), subscription_id=sub_id)
 resources = ResourceManagementClient(credential=AzureCliCredential(), subscription_id=sub_id)
+
+
+@cache
+def get_provider(namespace):
+    provider = resources.providers.get(namespace)
+    return provider
+
+
+@cache
+def get_api_version(namespace, type):
+    provider = get_provider(namespace)
+    rt = next((t for t in provider.resource_types if t.resource_type.lower() == type.lower()), None)
+    return rt.api_versions[0]
 
 
 def get_ip_ports():
@@ -20,10 +34,7 @@ def get_ip_ports():
         parts = parse_resource_id(ip.ip_configuration.id)
         if parts['type'] == 'bastionHosts':
             continue
-        provider = resources.providers.get(parts['namespace'])
-        type = parts['type']
-        rt = next((t for t in provider.resource_types if t.resource_type.lower() == type.lower()), None)
-        api_version = rt.api_versions[0]
+        api_version = get_api_version(parts['namespace'], parts['type'])
         split = ip.ip_configuration.id.split('/')
         id = '/'.join(split[:9])
         try:
