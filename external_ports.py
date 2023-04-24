@@ -41,6 +41,8 @@ def get_ip_ports():
                     id = resource.properties['networkSecurityGroup']['id']
                 except KeyError:
                     continue
+                if not 'virtualMachine' in resource.properties:
+                    continue
                 parts = parse_resource_id(id)
                 network_security_group = client.network_security_groups.get(resource_group_name=parts['resource_group'], network_security_group_name=parts['resource_name'])
                 for rule in network_security_group.security_rules:
