@@ -1,3 +1,3 @@
 |Script|Description|
 |------|-----------|
-|external_ports.py|Get external IPs and ports|
+|external_ports.py|Get external IPs, ports and resources with public network access|
