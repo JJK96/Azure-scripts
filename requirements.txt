@@ -1,3 +1,10 @@
 azure-mgmt-network
 azure-identity
 azure-mgmt-resource
+azure-mgmt-storage
+azure-mgmt-sql
+azure-mgmt-keyvault
+azure-mgmt-machinelearningservices
+azure-mgmt-loganalytics
+azure-mgmt-purview
+azure-mgmt-compute
